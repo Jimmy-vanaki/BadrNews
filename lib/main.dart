@@ -21,7 +21,7 @@ class BadrNews extends StatefulWidget {
 }
 
 class _BadrNewsState extends State<BadrNews> {
-  _GetThemeMod() async {
+  _GetContent() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       Constants.fontSize = pref.getDouble("fontsize") ?? 17;
@@ -30,7 +30,7 @@ class _BadrNewsState extends State<BadrNews> {
 
   @override
   void initState() {
-    _GetThemeMod();
+    _GetContent();
     super.initState();
   }
 

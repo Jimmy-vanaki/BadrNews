@@ -5,6 +5,7 @@ import 'package:badrnews/api/news_model.dart';
 import 'package:badrnews/constants/constants.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
+// import 'package:share_plus/share_plus.dart';
 
 class NewsContent extends StatefulWidget {
   final int newsId;
@@ -20,7 +21,6 @@ class NewsContent extends StatefulWidget {
 class _NewsContentState extends State<NewsContent> {
   bool addToFavorite = false;
   Future<PostNewsContent>? newsContent;
-
   @override
   void initState() {
     newsContent = fetchNewsContent(widget.newsId);
@@ -94,11 +94,17 @@ class _NewsContentState extends State<NewsContent> {
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Icon(
-                                      Icons.share_outlined,
-                                      color: Constants.themeColor,
-                                      size: 25,
+                                  children: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                        debugPrint("qwewqeqw");
+                                        // Share.share("text");
+                                      },
+                                      child: Icon(
+                                        Icons.share_outlined,
+                                        color: Constants.themeColor,
+                                        size: 25,
+                                      ),
                                     ),
                                     Text(
                                       snapshot.data!.post[0].dateTime
@@ -156,6 +162,46 @@ class _NewsContentState extends State<NewsContent> {
                             setState(() {
                               addToFavorite = !addToFavorite;
                             });
+                            if (addToFavorite == true) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  duration: const Duration(seconds: 2),
+                                  content: const Text(
+                                    'به علاقه مندی ها اضافه شد',
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      fontFamily: 'Jazeera-Regular',
+                                    ),
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Constants.themeColor,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 50,
+                                    vertical: 30,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              // bookMarkList.removeLast();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  duration: const Duration(seconds: 2),
+                                  content: const Text(
+                                    'از علاقه مندی ها حذف شد',
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      fontFamily: 'Jazeera-Regular',
+                                    ),
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Constants.themeColor,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 50,
+                                    vertical: 30,
+                                  ),
+                                ),
+                              );
+                            }
                           },
                           child: BlurryContainer(
                             blur: 2,

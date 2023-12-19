@@ -9,4 +9,5 @@ class Constants {
   static double fontSize = 24;
   static String imageURLPrefix = 'https://bnnews.iq/upload_list/thumbs/';
   static bool changeCategory = false;
+  static List<String> bookMarkList = [];
 }

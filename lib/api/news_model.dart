@@ -1,8 +1,3 @@
-import 'dart:convert';
-
-PostNews postNewsFromJson(String str) => PostNews.fromJson(json.decode(str));
-String postNewsToJson(PostNews data) => json.encode(data.toJson());
-
 class PostNews {
   List<News> news;
   Sliders sliders;
@@ -70,6 +65,7 @@ class News {
   String img;
   int dateTime;
   String categoryTitle;
+  DateTime newsDate;
   Category? category;
 
   News({
@@ -79,6 +75,7 @@ class News {
     required this.img,
     required this.dateTime,
     required this.categoryTitle,
+    required this.newsDate,
     this.category,
   });
 
@@ -89,6 +86,7 @@ class News {
         img: json["img"],
         dateTime: json["date_time"],
         categoryTitle: json["category_title"],
+        newsDate: DateTime.parse(json["news_date"]),
         category: json["category"] == null
             ? null
             : Category.fromJson(json["category"]),
@@ -101,6 +99,8 @@ class News {
         "img": img,
         "date_time": dateTime,
         "category_title": categoryTitle,
+        "news_date":
+            "${newsDate.year.toString().padLeft(4, '0')}-${newsDate.month.toString().padLeft(2, '0')}-${newsDate.day.toString().padLeft(2, '0')}",
         "category": category?.toJson(),
       };
 }
@@ -128,43 +128,45 @@ class Sliders {
 
 
 
+
 class PostNewsContent {
-  List<Post> post;
+    List<Post> post;
 
-  PostNewsContent({
-    required this.post,
-  });
+    PostNewsContent({
+        required this.post,
+    });
 
-  factory PostNewsContent.fromJson(Map<String, dynamic> json) =>
-      PostNewsContent(
+    factory PostNewsContent.fromJson(Map<String, dynamic> json) => PostNewsContent(
         post: List<Post>.from(json["post"].map((x) => Post.fromJson(x))),
-      );
+    );
 
-  Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() => {
         "post": List<dynamic>.from(post.map((x) => x.toJson())),
-      };
+    };
 }
 
 class Post {
-  int id;
-  int categoryId;
-  String title;
-  String img;
-  int dateTime;
-  String content;
-  String categoryTitle;
+    int id;
+    int categoryId;
+    String title;
+    String img;
+    int dateTime;
+    String content;
+    String categoryTitle;
+    DateTime newsDate;
 
-  Post({
-    required this.id,
-    required this.categoryId,
-    required this.title,
-    required this.img,
-    required this.dateTime,
-    required this.content,
-    required this.categoryTitle,
-  });
+    Post({
+        required this.id,
+        required this.categoryId,
+        required this.title,
+        required this.img,
+        required this.dateTime,
+        required this.content,
+        required this.categoryTitle,
+        required this.newsDate,
+    });
 
-  factory Post.fromJson(Map<String, dynamic> json) => Post(
+    factory Post.fromJson(Map<String, dynamic> json) => Post(
         id: json["id"],
         categoryId: json["category_id"],
         title: json["title"],
@@ -172,9 +174,10 @@ class Post {
         dateTime: json["date_time"],
         content: json["content"],
         categoryTitle: json["category_title"],
-      );
+        newsDate: DateTime.parse(json["news_date"]),
+    );
 
-  Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() => {
         "id": id,
         "category_id": categoryId,
         "title": title,
@@ -182,5 +185,24 @@ class Post {
         "date_time": dateTime,
         "content": content,
         "category_title": categoryTitle,
+        "news_date": "${newsDate.year.toString().padLeft(4, '0')}-${newsDate.month.toString().padLeft(2, '0')}-${newsDate.day.toString().padLeft(2, '0')}",
+    };
+}
+
+
+
+class Search {
+  List<News> news;
+
+  Search({
+    required this.news,
+  });
+
+  factory Search.fromJson(Map<String, dynamic> json) => Search(
+        news: List<News>.from(json["news"].map((x) => News.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "news": List<dynamic>.from(news.map((x) => x.toJson())),
       };
 }

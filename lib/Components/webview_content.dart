@@ -1,3 +1,4 @@
+import 'package:badrnews/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -14,23 +15,31 @@ class LoadContentWebView extends StatefulWidget {
 class _LoadContentWebViewState extends State<LoadContentWebView> {
   @override
   Widget build(BuildContext context) {
-    // Size size = MediaQuery.of(context).size;
+    // String str = widget.content.replaceAll('style="font-size: 14.0pt;"', "");
+    Size size = MediaQuery.of(context).size;
     WebViewController wbController = WebViewController()
-      ..enableZoom(false)
+      ..enableZoom(true)
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadHtmlString("""
       <!DOCTYPE html>
         <html dir='rtl'>
           <head><meta name="viewport" content="width=device-width, initial-scale=0.7"></head>
-          <body >
-          <p style='direction: rtl;text-align: justify;font-size: 20 !important;font-family: Arial;line-height: 2.2;'>${widget.content}</p>
+          <body>
+              <style>
+      @font-face {
+        font-family: "Jazeera-Regular";
+        src: url("../assets/fonts/Al-Jazeera-Arabic-Regular.ttf") format("truetype");
+      }
+    </style>
+          <div style='direction: rtl;text-align: justify;font-size: ${Constants.fontSize}px !important;font-family: Jazeera-Regular;line-height: 2.2;'>${widget.content}</div>
           <hr>
           <p>${widget.content}</p>
           </body>
         </html>
       """);
+
     return SizedBox(
-      height: 300,
+      height: 2000,
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: WebViewWidget(

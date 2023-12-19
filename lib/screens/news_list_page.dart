@@ -4,6 +4,7 @@ import 'package:badrnews/api/news_api.dart';
 import 'package:badrnews/api/news_model.dart';
 import 'package:badrnews/constants/constants.dart';
 import 'package:badrnews/screens/news_content.dart';
+import 'package:badrnews/screens/search_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -45,15 +46,15 @@ class _NewsListPagState extends State<NewsListPag> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.symmetric(
+              Padding(
+                padding: const EdgeInsets.symmetric(
                   vertical: 15,
                   horizontal: 20,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       "احدث الاخبار",
                       style: TextStyle(
                         fontFamily: 'Jazeera-Bold',
@@ -62,10 +63,24 @@ class _NewsListPagState extends State<NewsListPag> {
                         color: Colors.black54,
                       ),
                     ),
-                    Icon(
-                      Icons.search,
-                      color: Colors.black54,
-                      size: 30,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            child: const SearchPage(),
+                            type: PageTransitionType.bottomToTop,
+                          ),
+                        );
+                      },
+                      child: const RotatedBox(
+                        quarterTurns: 1,
+                        child: Icon(
+                          Icons.search,
+                          color: Colors.black54,
+                          size: 30,
+                        ),
+                      ),
                     )
                   ],
                 ),
@@ -249,11 +264,12 @@ class FutureBuilderNews extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return NewsCard(
-                dataTime: snapshot.data!.news[index].dateTime,
+                dataTime: snapshot.data!.news[index].dateTime.toString(),
                 id: snapshot.data!.news[index].id,
                 image:
                     Constants.imageURLPrefix + snapshot.data!.news[index].img,
                 title: snapshot.data!.news[index].title,
+                sw: '',
               );
             },
           );

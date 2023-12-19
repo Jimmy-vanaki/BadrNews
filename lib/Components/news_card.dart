@@ -2,16 +2,19 @@ import 'package:badrnews/constants/constants.dart';
 import 'package:badrnews/screens/news_content.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 
 class NewsCard extends StatefulWidget {
   final String image;
   final String title;
-  final int dataTime;
+  final String sw;
+  final String dataTime;
   final int id;
   const NewsCard({
     super.key,
     required this.image,
     required this.title,
+    required this.sw,
     required this.dataTime,
     required this.id,
   });
@@ -78,16 +81,23 @@ class _NewsCardState extends State<NewsCard> {
                         ),
                       ),
                     ),
-                    child: Text(
-                      widget.title,
+                    child: Directionality(
                       textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.justify,
-                      maxLines: 2,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontFamily: 'Jazeera-Bold',
+                      child: SubstringHighlight(
+                        text: widget.title,
+                        term: widget.sw,
+                        textAlign: TextAlign.justify,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textStyle: const TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Jazeera-Bold',
+                          color: Colors.black87,
+                        ),
+                        textStyleHighlight: TextStyle(
+                          backgroundColor: Colors.yellow,
+                          color: Constants.themeColor,
+                        ),
                       ),
                     ),
                   ),
