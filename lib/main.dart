@@ -1,10 +1,12 @@
 import 'package:badrnews/constants/constants.dart';
+import 'package:badrnews/db/badr_database.dart';
 import 'package:badrnews/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -21,8 +23,12 @@ class BadrNews extends StatefulWidget {
 }
 
 class _BadrNewsState extends State<BadrNews> {
+  InitializeDB initializeDB = InitializeDB();
+  
+
   _GetContent() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+
     setState(() {
       Constants.fontSize = pref.getDouble("fontsize") ?? 17;
     });
@@ -31,6 +37,7 @@ class _BadrNewsState extends State<BadrNews> {
   @override
   void initState() {
     _GetContent();
+    initializeDB.initDb();
     super.initState();
   }
 

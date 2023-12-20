@@ -7,7 +7,14 @@ class Constants {
   static Color itemColor = const Color.fromARGB(255, 86, 88, 87);
 
   static double fontSize = 24;
+  static double lineHeight = 1.5;
   static String imageURLPrefix = 'https://bnnews.iq/upload_list/thumbs/';
   static bool changeCategory = false;
-  static List<String> bookMarkList = [];
+  static List<dynamic> bookMarkContent = [];
+}
+
+String removeAllHtmlTags(String htmlText) {
+  RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+
+  return htmlText.replaceAll(exp, '');
 }

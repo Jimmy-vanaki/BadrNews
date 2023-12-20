@@ -17,6 +17,7 @@ class _SearchPageState extends State<SearchPage> {
   bool checkBoxTitle = true;
   bool checkBoxText = true;
   final controllerSearchNews = TextEditingController();
+  final searchFormKey = GlobalKey<FormState>();
   Future<Search>? listNews;
 
   @override
@@ -59,92 +60,107 @@ class _SearchPageState extends State<SearchPage> {
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
                   ),
-                  child: TextFormField(
-                    controller: controllerSearchNews,
-                    cursorColor: Colors.black,
-                    keyboardType: TextInputType.name,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontFamily: 'Jazeera-Regular',
-                      color: Colors.black87,
-                    ),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(5.0),
-                        ),
-                        borderSide: BorderSide(color: Constants.themeColor),
+                  child: Form(
+                    key: searchFormKey,
+                    child: TextFormField(
+                      controller: controllerSearchNews,
+                      cursorColor: Colors.black,
+                      keyboardType: TextInputType.name,
+                      validator: (String? value) {
+                        if (value!.isEmpty) {
+                          return "يرجى ادخال عبارة البحث!";
+                        } else if (value.length < 3) {
+                          return "يجب أن لا تقل عبارة البحث عن ثلاثة أحرف";
+                        }
+                        return null;
+                      },
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontFamily: 'Jazeera-Regular',
+                        color: Colors.black87,
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(5.0),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                          borderSide: BorderSide(color: Constants.themeColor),
                         ),
-                        borderSide: BorderSide(color: Constants.themeColor),
-                      ),
-                      focusedErrorBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(5.0),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                          borderSide: BorderSide(color: Constants.themeColor),
                         ),
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      suffixIcon: IconButton(
-                        color: Constants.themeColor,
-                        onPressed: () {
-                          if (checkBoxText == false && checkBoxTitle == false) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                duration: const Duration(seconds: 2),
-                                content: const Text(
-                                  'یک مورد را انتخاب کنید',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                    fontFamily: 'Jazeera-Regular',
+                        focusedErrorBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                          borderSide: BorderSide(color: Colors.blue),
+                        ),
+                        suffixIcon: IconButton(
+                          color: Constants.themeColor,
+                          onPressed: () {
+                            if (searchFormKey.currentState!.validate()) {
+                              if (checkBoxText == false &&
+                                  checkBoxTitle == false) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    duration: const Duration(seconds: 2),
+                                    content: const Text(
+                                      'يرجى الاختيار',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        fontFamily: 'Jazeera-Regular',
+                                      ),
+                                    ),
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: Constants.themeColor,
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 50,
+                                      vertical: 30,
+                                    ),
                                   ),
-                                ),
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Constants.themeColor,
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 50,
-                                  vertical: 30,
-                                ),
-                              ),
-                            );
-                          } else {
-                            debugPrint(controllerSearchNews.text);
-                            setState(() {
-                              listNews = fetchSearchItem(
-                                controllerSearchNews.text,
-                                searchInText,
-                                searchInTitle,
-                              );
-                            });
-                          }
-                        },
-                        icon: const RotatedBox(
-                          quarterTurns: 1,
-                          child: Icon(
-                            Icons.search,
+                                );
+                              } else {
+                                debugPrint(controllerSearchNews.text);
+                                setState(() {
+                                  listNews = fetchSearchItem(
+                                    controllerSearchNews.text,
+                                    searchInText,
+                                    searchInTitle,
+                                  );
+                                });
+                              }
+                            }
+                          },
+                          icon: const RotatedBox(
+                            quarterTurns: 1,
+                            child: Icon(
+                              Icons.search,
+                            ),
                           ),
                         ),
-                      ),
-                      // icon: Icon(
-                      //   Icons.search,
-                      // ),
-                      // iconColor: Constants.themeColor,
-                      hintText: "البحث...",
-                      hintStyle: const TextStyle(
-                        fontSize: 15,
-                        fontFamily: 'Jazeera-Regular',
-                      ),
-                      labelStyle: TextStyle(
-                        fontSize: 15,
-                        fontFamily: 'Jazeera-Regular',
-                        color: Constants.iconsColor,
-                      ),
-                      helperStyle: TextStyle(
-                        fontSize: 10,
-                        color: Constants.iconsColor,
-                        fontFamily: 'Jazeera-Regular',
+                        // icon: Icon(
+                        //   Icons.search,
+                        // ),
+                        // iconColor: Constants.themeColor,
+                        hintText: "البحث...",
+                        helperText: "",
+                        hintStyle: const TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Jazeera-Regular',
+                        ),
+                        labelStyle: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Jazeera-Regular',
+                          color: Constants.iconsColor,
+                        ),
+                        helperStyle: TextStyle(
+                          fontSize: 10,
+                          color: Constants.iconsColor,
+                          fontFamily: 'Jazeera-Regular',
+                        ),
                       ),
                     ),
                   ),
@@ -255,31 +271,28 @@ class FutureBuilderNews extends StatelessWidget {
       future: listNews,
       builder: (BuildContext context, AsyncSnapshot<Search> snapshot) {
         if (snapshot.hasData && Constants.changeCategory == true) {
-          return ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: snapshot.data!.news.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return NewsCard(
-                dataTime: snapshot.data!.news[index].dateTime.toString(),
-                id: snapshot.data!.news[index].id,
-                image:
-                    Constants.imageURLPrefix + snapshot.data!.news[index].img,
-                title: snapshot.data!.news[index].title,
-                sw: searchWord,
-              );
-            },
-          );
+          return snapshot.data!.news.isNotEmpty
+              ? ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: snapshot.data!.news.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return NewsCard(
+                      dataTime: snapshot.data!.news[index].dateTime.toString(),
+                      id: snapshot.data!.news[index].id,
+                      image: Constants.imageURLPrefix +
+                          snapshot.data!.news[index].img,
+                      title: snapshot.data!.news[index].title,
+                      sw: searchWord,
+                    );
+                  },
+                )
+              : const Center(child: Text("data"));
         } else if (snapshot.hasError) {
           debugPrint(snapshot.error.toString());
           return Center(child: Text("${snapshot.error}"));
         }
-        return const Center(
-          child: CircularProgressIndicator(
-            strokeWidth: 3,
-            color: Color.fromARGB(255, 208, 0, 0),
-          ),
-        );
+        return const Text("");
       },
     );
   }

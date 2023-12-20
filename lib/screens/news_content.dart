@@ -3,6 +3,7 @@ import 'package:badrnews/Components/webview_content.dart';
 import 'package:badrnews/api/news_api.dart';
 import 'package:badrnews/api/news_model.dart';
 import 'package:badrnews/constants/constants.dart';
+import 'package:badrnews/db/badr_database.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 // import 'package:share_plus/share_plus.dart';
@@ -20,7 +21,9 @@ class NewsContent extends StatefulWidget {
 
 class _NewsContentState extends State<NewsContent> {
   bool addToFavorite = false;
+  String newsText = "";
   Future<PostNewsContent>? newsContent;
+  AddBookmark addItem = AddBookmark();
   @override
   void initState() {
     newsContent = fetchNewsContent(widget.newsId);
@@ -36,6 +39,12 @@ class _NewsContentState extends State<NewsContent> {
         builder:
             (BuildContext context, AsyncSnapshot<PostNewsContent> snapshot) {
           if (snapshot.hasData) {
+            newsText = snapshot.data!.post[0].content;
+            newsText = newsText.replaceAll("&nbsp;", " ");
+            newsText = newsText.replaceAll("&ldquo;", '"');
+            newsText = newsText.replaceAll("&rdquo;", '"');
+
+            newsText = removeAllHtmlTags(newsText);
             return SizedBox(
               width: size.width,
               height: size.height,
@@ -71,7 +80,8 @@ class _NewsContentState extends State<NewsContent> {
                               children: <Widget>[
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
+                                    horizontal: 10,
+                                  ),
                                   decoration: BoxDecoration(
                                     border: Border(
                                       right: BorderSide(
@@ -117,9 +127,21 @@ class _NewsContentState extends State<NewsContent> {
                                   ],
                                 ),
                                 const SizedBox(height: 15),
-                                LoadContentWebView(
-                                  content: snapshot.data!.post[0].content,
+
+                                Text(
+                                  newsText,
+                                  textDirection: TextDirection.rtl,
+                                  textAlign: TextAlign.justify,
+                                  style: TextStyle(
+                                    fontSize: Constants.fontSize,
+                                    fontFamily: 'Jazeera-Regular',
+                                    color: Colors.black,
+                                    height: 2.1,
+                                  ),
                                 ),
+                                // LoadContentWebView(
+                                //   content: snapshot.data!.post[0].content,
+                                // ),
                               ],
                             ),
                           ),
@@ -161,13 +183,19 @@ class _NewsContentState extends State<NewsContent> {
                           onTap: () {
                             setState(() {
                               addToFavorite = !addToFavorite;
+                              addItem.add(
+                                  widget.newsId,
+                                  snapshot.data!.post[0].title,
+                                  snapshot.data!.post[0].dateTime.toString(),
+                                  Constants.imageURLPrefix +
+                                      snapshot.data!.post[0].img);
                             });
                             if (addToFavorite == true) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   duration: const Duration(seconds: 2),
                                   content: const Text(
-                                    'به علاقه مندی ها اضافه شد',
+                                    'تمت الاضافة للمفضلة',
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                       fontFamily: 'Jazeera-Regular',
@@ -187,7 +215,7 @@ class _NewsContentState extends State<NewsContent> {
                                 SnackBar(
                                   duration: const Duration(seconds: 2),
                                   content: const Text(
-                                    'از علاقه مندی ها حذف شد',
+                                    'تم الحذف من المفضلة',
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                       fontFamily: 'Jazeera-Regular',

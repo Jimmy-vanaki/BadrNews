@@ -22,13 +22,15 @@ class _HomePageState extends State<HomePage> {
   final List<String> drawerItemText = [
     "الرئيسية",
     "من نحن",
-    "الدعم الفني",
-    "شارك التطبيق",
+    "اتصل بنا",
+    "سياسة الخصوصية",
+    "مشاركة التطبيق",
   ];
   final List<IconData> drawerItemIcon = [
     Icons.home,
     Icons.assignment_late_outlined,
     Icons.phone_enabled,
+    Icons.privacy_tip_outlined,
     Icons.share,
   ];
   List<Widget> pages() {
@@ -70,9 +72,9 @@ class _HomePageState extends State<HomePage> {
           children: pages(),
         ),
         drawer: Drawer(
-          backgroundColor: Colors.redAccent,
+          backgroundColor: const Color.fromARGB(255, 152, 151, 151),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 30),
+            padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
             child: Column(
               children: <Widget>[
                 Image.asset(
@@ -95,8 +97,11 @@ class _HomePageState extends State<HomePage> {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Text(
-                      "mohammad",
-                      style: TextStyle(color: Colors.black87),
+                      "الاصدار: 1.1",
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontFamily: 'Jazeera-Regular',
+                      ),
                     ),
                   ),
                 )
@@ -145,7 +150,7 @@ class DrawerItems extends StatelessWidget {
     return InkWell(
       onTap: () {},
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 6),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           textDirection: TextDirection.rtl,

@@ -107,21 +107,12 @@ class _NewsListPagState extends State<NewsListPag> {
                             AsyncSnapshot<PostNews> snapshot) {
                           if (snapshot.hasData &&
                               Constants.changeCategory == true) {
-                            return i == 0
-                                ? SliderItem(
-                                    id: snapshot.data!.sliders.fixed[i].id,
-                                    image: Constants.imageURLPrefix +
-                                        snapshot.data!.sliders.fixed[i].img,
-                                    title:
-                                        snapshot.data!.sliders.fixed[i].title,
-                                  )
-                                : SliderItem(
-                                    id: snapshot.data!.sliders.other[i].id,
-                                    image: Constants.imageURLPrefix +
-                                        snapshot.data!.sliders.other[i].img,
-                                    title:
-                                        snapshot.data!.sliders.other[i].title,
-                                  );
+                            return SliderItem(
+                              id: snapshot.data!.sliders[i].id,
+                              image: Constants.imageURLPrefix +
+                                  snapshot.data!.sliders[i].img,
+                              title: snapshot.data!.sliders[i].title,
+                            );
                           } else if (snapshot.hasError) {
                             return Center(child: Text("${snapshot.error}"));
                           }

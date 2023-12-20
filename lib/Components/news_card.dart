@@ -40,7 +40,7 @@ class _NewsCardState extends State<NewsCard> {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+        padding: const EdgeInsets.all(10),
         child: Row(
           textDirection: TextDirection.rtl,
           children: <Widget>[
@@ -70,6 +70,7 @@ class _NewsCardState extends State<NewsCard> {
             ),
             Flexible(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.only(right: 10),
