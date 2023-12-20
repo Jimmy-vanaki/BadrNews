@@ -72,18 +72,18 @@ class _HomePageState extends State<HomePage> {
           children: pages(),
         ),
         drawer: Drawer(
-          backgroundColor: const Color.fromARGB(255, 152, 151, 151),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
-            child: Column(
-              children: <Widget>[
-                Image.asset(
-                  './Assets/images/logo-bn.png',
-                  fit: BoxFit.fill,
-                  width: 180,
-                ),
-                const SizedBox(height: 100),
-                Column(
+          width: 300,
+          backgroundColor: Colors.white,
+          child: Column(
+            children: <Widget>[
+              Image.asset(
+                './Assets/images/hd-bn.jpg',
+                fit: BoxFit.fill,
+              ),
+              const SizedBox(height: 100),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
                   children: List.generate(
                     drawerItemText.length,
                     (index) => DrawerItems(
@@ -93,20 +93,20 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                const Expanded(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      "الاصدار: 1.1",
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontFamily: 'Jazeera-Regular',
-                      ),
+              ),
+              const Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    "الاصدار: 1.1",
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontFamily: 'Jazeera-Regular',
                     ),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
         bottomNavigationBar: AnimatedBottomNavigationBar.builder(

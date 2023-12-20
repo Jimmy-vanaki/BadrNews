@@ -10,6 +10,7 @@ class Constants {
   static double lineHeight = 1.5;
   static String imageURLPrefix = 'https://bnnews.iq/upload_list/thumbs/';
   static bool changeCategory = false;
+  static bool hasbookmark = false;
   static List<dynamic> bookMarkContent = [];
 }
 

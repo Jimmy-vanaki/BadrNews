@@ -3,6 +3,7 @@ import 'package:badrnews/api/news_api.dart';
 import 'package:badrnews/api/news_model.dart';
 import 'package:badrnews/constants/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -108,7 +109,7 @@ class _SearchPageState extends State<SearchPage> {
                                   SnackBar(
                                     duration: const Duration(seconds: 2),
                                     content: const Text(
-                                      'يرجى الاختيار',
+                                      'يرجى تحديد نطاق البحث',
                                       textAlign: TextAlign.right,
                                       style: TextStyle(
                                         fontFamily: 'Jazeera-Regular',
@@ -287,12 +288,17 @@ class FutureBuilderNews extends StatelessWidget {
                     );
                   },
                 )
-              : const Center(child: Text("data"));
+              : Center(
+                  child:
+                      Lottie.asset('./Assets/animations/Animation-search.json'),
+                );
         } else if (snapshot.hasError) {
           debugPrint(snapshot.error.toString());
           return Center(child: Text("${snapshot.error}"));
         }
-        return const Text("");
+        return Center(
+          child: Lottie.asset('./Assets/animations/Animation-search.json'),
+        );
       },
     );
   }

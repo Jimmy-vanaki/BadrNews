@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:badrnews/Components/skeleton.dart';
 import 'package:badrnews/Components/webview_content.dart';
 import 'package:badrnews/api/news_api.dart';
@@ -23,16 +25,23 @@ class _NewsContentState extends State<NewsContent> {
   bool addToFavorite = false;
   String newsText = "";
   Future<PostNewsContent>? newsContent;
-  AddBookmark addItem = AddBookmark();
+  final AddBookmark _addItem = AddBookmark();
+  final DeleteBookmark _deleteItem = DeleteBookmark();
+  final Bookmark _bookmark = Bookmark();
+
   @override
   void initState() {
     newsContent = fetchNewsContent(widget.newsId);
+    // _bookmark.has(widget.newsId);
+    // addToFavorite = Constants.hasbookmark;
+    // debugPrint(addToFavorite.toString());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: FutureBuilder(
         future: newsContent,
@@ -183,12 +192,6 @@ class _NewsContentState extends State<NewsContent> {
                           onTap: () {
                             setState(() {
                               addToFavorite = !addToFavorite;
-                              addItem.add(
-                                  widget.newsId,
-                                  snapshot.data!.post[0].title,
-                                  snapshot.data!.post[0].dateTime.toString(),
-                                  Constants.imageURLPrefix +
-                                      snapshot.data!.post[0].img);
                             });
                             if (addToFavorite == true) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -209,8 +212,18 @@ class _NewsContentState extends State<NewsContent> {
                                   ),
                                 ),
                               );
+
+                              _addItem.add(
+                                widget.newsId,
+                                snapshot.data!.post[0].title,
+                                snapshot.data!.post[0].dateTime.toString(),
+                                Constants.imageURLPrefix +
+                                    snapshot.data!.post[0].img,
+                                snapshot.data!.post[0].content,
+                              );
                             } else {
                               // bookMarkList.removeLast();
+                              _deleteItem.delete(widget.newsId);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   duration: const Duration(seconds: 2),

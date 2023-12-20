@@ -1,6 +1,7 @@
 import 'package:badrnews/Components/news_card.dart';
 import 'package:badrnews/constants/constants.dart';
 import 'package:badrnews/db/badr_database.dart';
+import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 
 class BookMarkPage extends StatefulWidget {
@@ -41,7 +42,9 @@ class _BookMarkPageState extends State<BookMarkPage> {
                   ),
                 ),
               )
-            : Text("data");
+            : Center(
+                child: Lottie.asset('./Assets/animations/Animation-bookmark.json'),
+              );
       },
     );
   }

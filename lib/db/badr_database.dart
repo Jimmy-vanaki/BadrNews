@@ -47,6 +47,7 @@ class GetBookMark {
         'title': row['title'],
         'data': row['data'],
         'image': row['image'],
+        'content': row['content'],
       });
     }
     debugPrint(
@@ -55,9 +56,35 @@ class GetBookMark {
 }
 
 class AddBookmark {
-  void add(int id, String title, String data, String image) {
-    db?.rawInsert(
-        'INSERT INTO bookmark(id, title, data,image) VALUES($id,"$title","$data","$image")');
-    // _query();
+  void add(int id, String title, String data, String image, String content) {
+    db?.insert(
+      'bookmark',
+      {
+        'id': id,
+        'title': title,
+        'data': data,
+        'image': image,
+        'content': content,
+      },
+    );
+    // db?.rawInsert('INSERT INTO bookmark(id, title, data,image,content) VALUES($id,"$title","$data","$image","$content")');
+  }
+}
+
+class DeleteBookmark {
+  void delete(int id) {
+    db?.rawDelete('DELETE FROM bookmark WHERE id = ?', [id]);
+  }
+}
+
+class Bookmark {
+  Future has(int id) async {
+    List<Map> result =
+        await db!.rawQuery('SELECT * FROM bookmark WHERE id = ?', [id]);
+    if (result.isNotEmpty) {
+      Constants.hasbookmark = true;
+    } else {
+      Constants.hasbookmark = false;
+    }
   }
 }

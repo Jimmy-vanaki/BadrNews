@@ -42,6 +42,7 @@ flutter:
 
   assets:
     - Assets/images/
+    - Assets/animations/
     - Assets/badrDB.sqlite
 
   fonts:
