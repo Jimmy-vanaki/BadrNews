@@ -7,8 +7,12 @@ class Constants {
   static Color itemColor = const Color.fromARGB(255, 86, 88, 87);
 
   static double fontSize = 24;
-  static double lineHeight = 1.5;
-  static String imageURLPrefix = 'https://bnnews.iq/upload_list/thumbs/';
+  static double lineHeight = 1.8;
+  static const String imageURLPrefix = 'https://bnnews.iq/upload_list/thumbs/';
+  static const String sliderImageURLPrefix = 'https://bnnews.iq/upload_list/source/';
+  static const String shareAppText = 'ارسل بواسطة تطبيق (وكالة بدر نيوز)\n';
+
+
   static bool changeCategory = false;
   static bool hasbookmark = false;
   static List<dynamic> bookMarkContent = [];

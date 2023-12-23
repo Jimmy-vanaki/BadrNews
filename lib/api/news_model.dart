@@ -62,7 +62,7 @@ class News {
     String img;
     int dateTime;
     String categoryTitle;
-    DateTime newsDate;
+    String newsDate;
     Category? category;
 
     News({
@@ -83,7 +83,7 @@ class News {
         img: json["img"],
         dateTime: json["date_time"],
         categoryTitle: json["category_title"],
-        newsDate: DateTime.parse(json["news_date"]),
+        newsDate: (json["news_date"]),
         category: json["category"] == null ? null : Category.fromJson(json["category"]),
     );
 
@@ -94,7 +94,7 @@ class News {
         "img": img,
         "date_time": dateTime,
         "category_title": categoryTitle,
-        "news_date": "${newsDate.year.toString().padLeft(4, '0')}-${newsDate.month.toString().padLeft(2, '0')}-${newsDate.day.toString().padLeft(2, '0')}",
+        "news_date": newsDate,
         "category": category?.toJson(),
     };
 }
@@ -127,7 +127,7 @@ class Post {
     int dateTime;
     String content;
     String categoryTitle;
-    DateTime newsDate;
+    String newsDate;
 
     Post({
         required this.id,
@@ -148,7 +148,7 @@ class Post {
         dateTime: json["date_time"],
         content: json["content"],
         categoryTitle: json["category_title"],
-        newsDate: DateTime.parse(json["news_date"]),
+        newsDate: (json["news_date"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -159,7 +159,7 @@ class Post {
         "date_time": dateTime,
         "content": content,
         "category_title": categoryTitle,
-        "news_date": "${newsDate.year.toString().padLeft(4, '0')}-${newsDate.month.toString().padLeft(2, '0')}-${newsDate.day.toString().padLeft(2, '0')}",
+        "news_date": newsDate,
     };
 }
 

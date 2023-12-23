@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "570164483081",
+    "project_id": "bnnews-8a55c",
+    "storage_bucket": "bnnews-8a55c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570164483081:android:19127e48855801c8a1d4d8",
+        "android_client_info": {
+          "package_name": "com.dijlah.bnnews"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjEHVwyukYO77m7CcbLJ8yOUscW2omWJ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -74,39 +75,43 @@ class _HomePageState extends State<HomePage> {
         drawer: Drawer(
           width: 300,
           backgroundColor: Colors.white,
-          child: Column(
-            children: <Widget>[
-              Image.asset(
-                './Assets/images/hd-bn.jpg',
-                fit: BoxFit.fill,
-              ),
-              const SizedBox(height: 100),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: List.generate(
-                    drawerItemText.length,
-                    (index) => DrawerItems(
-                      title: drawerItemText[index],
-                      icon: drawerItemIcon[index],
-                      tag: index,
+          child: SizedBox(
+            height: size.height,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Image.asset(
+                    './Assets/images/hd-bn.jpg',
+                    fit: BoxFit.fill,
+                  ),
+                  const SizedBox(height: 100),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: List.generate(
+                        drawerItemText.length,
+                        (index) => DrawerItems(
+                          title: drawerItemText[index],
+                          icon: drawerItemIcon[index],
+                          tag: index,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              const Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Text(
-                    "الاصدار: 1.1",
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontFamily: 'Jazeera-Regular',
+                  const SizedBox(height: 200),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                      "الاصدار: 1.1",
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontFamily: 'Jazeera-Regular',
+                      ),
                     ),
-                  ),
-                ),
-              )
-            ],
+                  )
+                ],
+              ),
+            ),
           ),
         ),
         bottomNavigationBar: AnimatedBottomNavigationBar.builder(

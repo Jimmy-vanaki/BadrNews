@@ -54,13 +54,13 @@ class _NewsListPagState extends State<NewsListPag> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    const Text(
-                      "احدث الاخبار",
+                    Text(
+                      "أحدث الأخبار",
                       style: TextStyle(
                         fontFamily: 'Jazeera-Bold',
                         fontWeight: FontWeight.w900,
                         fontSize: 18,
-                        color: Colors.black54,
+                        color: Constants.themeColor,
                       ),
                     ),
                     InkWell(
@@ -73,11 +73,11 @@ class _NewsListPagState extends State<NewsListPag> {
                           ),
                         );
                       },
-                      child: const RotatedBox(
+                      child: RotatedBox(
                         quarterTurns: 1,
                         child: Icon(
                           Icons.search,
-                          color: Colors.black54,
+                          color: Constants.themeColor,
                           size: 30,
                         ),
                       ),
@@ -109,7 +109,7 @@ class _NewsListPagState extends State<NewsListPag> {
                               Constants.changeCategory == true) {
                             return SliderItem(
                               id: snapshot.data!.sliders[i].id,
-                              image: Constants.imageURLPrefix +
+                              image: Constants.sliderImageURLPrefix +
                                   snapshot.data!.sliders[i].img,
                               title: snapshot.data!.sliders[i].title,
                             );
@@ -255,7 +255,7 @@ class FutureBuilderNews extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return NewsCard(
-                dataTime: snapshot.data!.news[index].dateTime.toString(),
+                dataTime: snapshot.data!.news[index].newsDate.toString(),
                 id: snapshot.data!.news[index].id,
                 image:
                     Constants.imageURLPrefix + snapshot.data!.news[index].img,
@@ -369,8 +369,8 @@ class SliderItem extends StatelessWidget {
                     title,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 13,
-                      fontFamily: 'Jazeera-Regular',
+                      fontSize: 15,
+                      fontFamily: 'Jazeera-Bold',
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

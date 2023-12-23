@@ -36,55 +36,50 @@ class InitializeDB {
   }
 }
 
-class GetBookMark {
-  Future query() async {
-    Constants.bookMarkContent.clear();
-    List<Map> result = await db!.rawQuery('SELECT * FROM bookmark');
+Future getBookMark() async {
+  Constants.bookMarkContent.clear();
+  List<Map> result = await db!.rawQuery('SELECT * FROM bookmark');
 
-    for (var row in result) {
-      Constants.bookMarkContent.add({
-        'id': row['id'],
-        'title': row['title'],
-        'data': row['data'],
-        'image': row['image'],
-        'content': row['content'],
-      });
-    }
-    debugPrint(
-        "${Constants.bookMarkContent.length}<------Constants.bookMarkContent.length");
+  for (var row in result) {
+    Constants.bookMarkContent.add({
+      'id': row['id'],
+      'title': row['title'],
+      'data': row['data'],
+      'image': row['image'],
+      'content': row['content'],
+    });
   }
+  debugPrint(
+      "${Constants.bookMarkContent.length}<------Constants.bookMarkContent.length");
 }
 
-class AddBookmark {
-  void add(int id, String title, String data, String image, String content) {
-    db?.insert(
-      'bookmark',
-      {
-        'id': id,
-        'title': title,
-        'data': data,
-        'image': image,
-        'content': content,
-      },
-    );
-    // db?.rawInsert('INSERT INTO bookmark(id, title, data,image,content) VALUES($id,"$title","$data","$image","$content")');
-  }
+void addToBookMark(
+    int id, String title, String data, String image, String content) {
+  debugPrint(id.toString());
+  debugPrint("$data<-------");
+  db?.insert(
+    'bookmark',
+    {
+      'id': id,
+      'title': title,
+      'data': data,
+      'image': image,
+      'content': content,
+    },
+  );
+  // db?.rawInsert('INSERT INTO bookmark(id, title, data,image,content) VALUES($id,"$title","$data","$image","$content")');
 }
 
-class DeleteBookmark {
-  void delete(int id) {
-    db?.rawDelete('DELETE FROM bookmark WHERE id = ?', [id]);
-  }
+void deleteBookmark(int id) {
+  db?.rawDelete('DELETE FROM bookmark WHERE id = ?', [id]);
 }
 
-class Bookmark {
-  Future has(int id) async {
-    List<Map> result =
-        await db!.rawQuery('SELECT * FROM bookmark WHERE id = ?', [id]);
-    if (result.isNotEmpty) {
-      Constants.hasbookmark = true;
-    } else {
-      Constants.hasbookmark = false;
-    }
+Future hasBookMark(int id) async {
+  List<Map> result =
+      await db!.rawQuery('SELECT * FROM bookmark WHERE id = ?', [id]);
+  if (result.isNotEmpty) {
+    Constants.hasbookmark = true;
+  } else {
+    Constants.hasbookmark = false;
   }
 }

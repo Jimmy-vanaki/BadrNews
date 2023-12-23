@@ -28,6 +28,8 @@ class _NewsCardState extends State<NewsCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        debugPrint(widget.dataTime.toString());
+
         debugPrint(widget.id.toString());
         Navigator.push(
           context,
@@ -46,25 +48,28 @@ class _NewsCardState extends State<NewsCard> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(left: 10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.network(
-                  widget.image,
-                  width: 90,
-                  height: 80,
-                  fit: BoxFit.fill,
-                  frameBuilder:
-                      (context, child, frame, wasSynchronouslyLoaded) {
-                    return Container(
-                      width: 90,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: child,
-                    );
-                  },
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.network(
+                    widget.image,
+                    width: 90,
+                    height: 80,
+                    fit: BoxFit.fill,
+                    frameBuilder:
+                        (context, child, frame, wasSynchronouslyLoaded) {
+                      return Container(
+                        width: 90,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: child,
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

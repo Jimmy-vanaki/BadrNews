@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:badrnews/Components/skeleton.dart';
 import 'package:badrnews/Components/webview_content.dart';
 import 'package:badrnews/api/news_api.dart';
@@ -8,7 +6,7 @@ import 'package:badrnews/constants/constants.dart';
 import 'package:badrnews/db/badr_database.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
-// import 'package:share_plus/share_plus.dart';
+import 'package:share_plus/share_plus.dart';
 
 class NewsContent extends StatefulWidget {
   final int newsId;
@@ -22,19 +20,13 @@ class NewsContent extends StatefulWidget {
 }
 
 class _NewsContentState extends State<NewsContent> {
-  bool addToFavorite = false;
+  // bool addToFavorite =   hass(widget.newsId);
   String newsText = "";
   Future<PostNewsContent>? newsContent;
-  final AddBookmark _addItem = AddBookmark();
-  final DeleteBookmark _deleteItem = DeleteBookmark();
-  final Bookmark _bookmark = Bookmark();
 
   @override
   void initState() {
     newsContent = fetchNewsContent(widget.newsId);
-    // _bookmark.has(widget.newsId);
-    // addToFavorite = Constants.hasbookmark;
-    // debugPrint(addToFavorite.toString());
     super.initState();
   }
 
@@ -86,6 +78,7 @@ class _NewsContentState extends State<NewsContent> {
                           child: SingleChildScrollView(
                             controller: scrollController,
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: <Widget>[
                                 Container(
                                   padding: const EdgeInsets.symmetric(
@@ -104,8 +97,9 @@ class _NewsContentState extends State<NewsContent> {
                                     textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.justify,
                                     style: TextStyle(
-                                      fontSize: Constants.fontSize,
+                                      fontSize: Constants.fontSize + 4,
                                       fontFamily: 'Jazeera-Bold',
+                                      color: Constants.themeColor,
                                     ),
                                   ),
                                 ),
@@ -118,6 +112,17 @@ class _NewsContentState extends State<NewsContent> {
                                       onTap: () {
                                         debugPrint("qwewqeqw");
                                         // Share.share("text");
+                                        final box = context.findRenderObject()
+                                            as RenderBox?;
+
+                                        Share.share(
+                                          Constants.shareAppText +
+                                              snapshot.data!.post[0].content,
+                                          subject: snapshot.data!.post[0].title,
+                                          sharePositionOrigin:
+                                              box!.localToGlobal(Offset.zero) &
+                                                  box.size,
+                                        );
                                       },
                                       child: Icon(
                                         Icons.share_outlined,
@@ -126,7 +131,7 @@ class _NewsContentState extends State<NewsContent> {
                                       ),
                                     ),
                                     Text(
-                                      snapshot.data!.post[0].dateTime
+                                      snapshot.data!.post[0].newsDate
                                           .toString(),
                                       style: const TextStyle(
                                           fontSize: 12,
@@ -136,21 +141,9 @@ class _NewsContentState extends State<NewsContent> {
                                   ],
                                 ),
                                 const SizedBox(height: 15),
-
-                                Text(
-                                  newsText,
-                                  textDirection: TextDirection.rtl,
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(
-                                    fontSize: Constants.fontSize,
-                                    fontFamily: 'Jazeera-Regular',
-                                    color: Colors.black,
-                                    height: 2.1,
-                                  ),
+                                LoadContentWebView(
+                                  content: snapshot.data!.post[0].content,
                                 ),
-                                // LoadContentWebView(
-                                //   content: snapshot.data!.post[0].content,
-                                // ),
                               ],
                             ),
                           ),
@@ -164,6 +157,7 @@ class _NewsContentState extends State<NewsContent> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        //BACK _
                         InkWell(
                           onTap: () {
                             setState(() {
@@ -188,81 +182,91 @@ class _NewsContentState extends State<NewsContent> {
                             ),
                           ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              addToFavorite = !addToFavorite;
-                            });
-                            if (addToFavorite == true) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  duration: const Duration(seconds: 2),
-                                  content: const Text(
-                                    'تمت الاضافة للمفضلة',
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      fontFamily: 'Jazeera-Regular',
-                                    ),
-                                  ),
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Constants.themeColor,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 50,
-                                    vertical: 30,
-                                  ),
-                                ),
-                              );
+                        //BOOK MARK
+                        FutureBuilder(
+                          future: hasBookMark(widget.newsId),
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot11) {
+                            // addToFavorite = Constants.hasbookmark;
 
-                              _addItem.add(
-                                widget.newsId,
-                                snapshot.data!.post[0].title,
-                                snapshot.data!.post[0].dateTime.toString(),
-                                Constants.imageURLPrefix +
-                                    snapshot.data!.post[0].img,
-                                snapshot.data!.post[0].content,
-                              );
-                            } else {
-                              // bookMarkList.removeLast();
-                              _deleteItem.delete(widget.newsId);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  duration: const Duration(seconds: 2),
-                                  content: const Text(
-                                    'تم الحذف من المفضلة',
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      fontFamily: 'Jazeera-Regular',
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  Constants.hasbookmark =
+                                      !Constants.hasbookmark;
+                                });
+                                if (Constants.hasbookmark == true) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      duration: const Duration(seconds: 2),
+                                      content: const Text(
+                                        'تمت الاضافة للمفضلة',
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                          fontFamily: 'Jazeera-Regular',
+                                        ),
+                                      ),
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Constants.themeColor,
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 50,
+                                        vertical: 30,
+                                      ),
                                     ),
-                                  ),
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Constants.themeColor,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 50,
-                                    vertical: 30,
-                                  ),
+                                  );
+
+                                  addToBookMark(
+                                    widget.newsId,
+                                    snapshot.data!.post[0].title,
+                                    snapshot.data!.post[0].newsDate.toString(),
+                                    Constants.sliderImageURLPrefix +
+                                        snapshot.data!.post[0].img,
+                                    snapshot.data!.post[0].content,
+                                  );
+                                } else {
+                                  // bookMarkList.removeLast();
+                                  deleteBookmark(widget.newsId);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      duration: const Duration(seconds: 2),
+                                      content: const Text(
+                                        'تم الحذف من المفضلة',
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                          fontFamily: 'Jazeera-Regular',
+                                        ),
+                                      ),
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Constants.themeColor,
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 50,
+                                        vertical: 30,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: BlurryContainer(
+                                blur: 2,
+                                width: 40,
+                                height: 40,
+                                elevation: 0,
+                                color: Colors.white30,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(50),
                                 ),
-                              );
-                            }
+                                child: Icon(
+                                  Constants.hasbookmark
+                                      ? Icons.bookmark
+                                      : Icons.bookmark_border,
+                                  color: Constants.hasbookmark
+                                      ? Constants.themeColor
+                                      : Colors.black,
+                                  size: 25,
+                                ),
+                              ),
+                            );
                           },
-                          child: BlurryContainer(
-                            blur: 2,
-                            width: 40,
-                            height: 40,
-                            elevation: 0,
-                            color: Colors.white30,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(50),
-                            ),
-                            child: Icon(
-                              addToFavorite
-                                  ? Icons.bookmark
-                                  : Icons.bookmark_border,
-                              color: addToFavorite
-                                  ? Constants.themeColor
-                                  : Colors.black,
-                              size: 25,
-                            ),
-                          ),
                         ),
                       ],
                     ),

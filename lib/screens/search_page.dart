@@ -279,7 +279,7 @@ class FutureBuilderNews extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return NewsCard(
-                      dataTime: snapshot.data!.news[index].dateTime.toString(),
+                      dataTime: snapshot.data!.news[index].newsDate.toString(),
                       id: snapshot.data!.news[index].id,
                       image: Constants.imageURLPrefix +
                           snapshot.data!.news[index].img,

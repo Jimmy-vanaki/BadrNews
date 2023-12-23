@@ -12,17 +12,17 @@ class BookMarkPage extends StatefulWidget {
 }
 
 class _BookMarkPageState extends State<BookMarkPage> {
-  final GetBookMark _getBookMark = GetBookMark();
+  // final GetBookMark _getBookMark = GetBookMark();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return FutureBuilder(
-      future: _getBookMark.query(),
+      future: getBookMark(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Constants.bookMarkContent.isNotEmpty
             ? Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(10.0),
                 child: SizedBox(
                   width: size.width - 20,
                   height: size.height,
