@@ -32,10 +32,18 @@ dependencies:
   liquid_pull_to_refresh: ^3.0.1
   package_info_plus: ^4.2.0
   flutter_email_sender: ^6.0.2
+  flutter_launcher_icons: ^0.13.1
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/lunchericon/appicon.png"
+
 
   flutter_lints: ^2.0.0
 

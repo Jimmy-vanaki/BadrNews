@@ -9,6 +9,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:page_transition/page_transition.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -51,7 +52,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -80,9 +80,8 @@ class _HomePageState extends State<HomePage> {
         drawer: Drawer(
           width: 300,
           backgroundColor: Colors.white,
-          child: SizedBox(
-            height: size.height,
-            child: SingleChildScrollView(
+          child: SingleChildScrollView(
+            child: SizedBox(
               child: Column(
                 children: <Widget>[
                   Image.asset(
@@ -103,17 +102,36 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 200),
-                  const Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      "الاصدار: 1.1",
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontFamily: Constants.regularFontFamily,
-                      ),
+                  const SizedBox(height: 280),
+                  Text(
+                    "الاصدار: 1.0",
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontFamily: Constants.regularFontFamily,
                     ),
-                  )
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: GestureDetector(
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Powered by ',
+                          style: TextStyle(color: Colors.black87),
+                          children: const <TextSpan>[
+                            TextSpan(
+                              text: 'DIjlah IT',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () => _launchUrl('https://dijlah.org'),
+                    ),
+                  ),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -141,6 +159,13 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+}
+
+Future<void> _launchUrl(_url) async {
+  debugPrint('--------------------------------------------');
+  if (!await launchUrl(Uri.parse(_url))) {
+    throw Exception('Could not launch $_url');
   }
 }
 

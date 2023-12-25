@@ -294,7 +294,12 @@ class FutureBuilderNews extends StatelessWidget {
                 );
         } else if (snapshot.hasError) {
           debugPrint(snapshot.error.toString());
-          return Center(child: Text("${snapshot.error}"));
+          return Center(
+            child: Lottie.asset(
+              './Assets/animations/Animation-network.json',
+              width: 200,
+            ),
+          );
         }
         return Center(
           child: Lottie.asset('./Assets/animations/Animation-search.json'),

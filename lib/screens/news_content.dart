@@ -6,6 +6,7 @@ import 'package:badrnews/constants/constants.dart';
 import 'package:badrnews/db/badr_database.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:share_plus/share_plus.dart';
 
 class NewsContent extends StatefulWidget {
@@ -278,7 +279,12 @@ class _NewsContentState extends State<NewsContent> {
               ),
             );
           } else if (snapshot.hasError) {
-            return Center(child: Text("${snapshot.error}"));
+            return Center(
+              child: Lottie.asset(
+                './Assets/animations/Animation-network.json',
+                width: 200,
+              ),
+            );
           }
           return const Directionality(
             textDirection: TextDirection.rtl,

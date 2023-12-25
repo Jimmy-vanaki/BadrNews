@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:badrnews/api/firebase_api.dart';
 import 'package:badrnews/constants/constants.dart';
 import 'package:badrnews/db/badr_database.dart';
@@ -10,9 +11,20 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await FirebaseMessaging.instance.subscribeToTopic("general");
-  await FirebaseApi().inintNotifications();
+  try {
+    final result = await InternetAddress.lookup('example.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      debugPrint('connected');
+      await Firebase.initializeApp();
+      await FirebaseMessaging.instance.subscribeToTopic("general");
+      await FirebaseApi().inintNotifications();
+      Constants.connectToInternet = true;
+    }
+  } on SocketException catch (_) {
+    debugPrint('not connected');
+    Constants.connectToInternet = false;
+  }
+
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,

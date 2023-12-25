@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -14,7 +16,7 @@ class Constants {
   static const String sliderImageURLPrefix =
       'https://bnnews.iq/upload_list/source/';
   static const String shareAppText = 'ارسل بواسطة تطبيق (وكالة بدر نيوز)\n';
-  static  PackageInfo packageInfo = PackageInfo(
+  static PackageInfo packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
     version: 'Unknown',
@@ -25,6 +27,7 @@ class Constants {
   static bool changeCategory = false;
   static bool refreshNews = false;
   static bool hasbookmark = false;
+  static bool connectToInternet = true;
   static List<dynamic> bookMarkContent = [];
 }
 
@@ -32,4 +35,17 @@ String removeAllHtmlTags(String htmlText) {
   RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
 
   return htmlText.replaceAll(exp, '');
+}
+
+connected() async {
+  try {
+    final result = await InternetAddress.lookup('example.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      debugPrint('connected');
+      Constants.connectToInternet = true;
+    }
+  } on SocketException catch (_) {
+    debugPrint('not connected');
+    Constants.connectToInternet = false;
+  }
 }
