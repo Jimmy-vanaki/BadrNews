@@ -1,5 +1,6 @@
 import 'package:badrnews/constants/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends StatefulWidget {
@@ -11,15 +12,14 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   bool isNotifActive = true;
-
-  _SetThemeMod() async {
+  _setfontsize() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setDouble('fontsize', Constants.fontSize);
   }
 
-  @override
-  void initState() {
-    super.initState();
+  _setlineheight() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setDouble('lineheight', Constants.lineHeight);
   }
 
   @override
@@ -45,7 +45,7 @@ class _SettingPageState extends State<SettingPage> {
                       style: TextStyle(
                         color: Colors.black54,
                         fontSize: 16,
-                        fontFamily: 'Jazeera-Regular',
+                        fontFamily: Constants.regularFontFamily,
                       ),
                     ),
                   ],
@@ -80,7 +80,7 @@ class _SettingPageState extends State<SettingPage> {
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
-                          fontFamily: 'Jazeera-Regular',
+                          fontFamily: Constants.regularFontFamily,
                         ),
                       ),
                     ],
@@ -94,7 +94,7 @@ class _SettingPageState extends State<SettingPage> {
                     onChanged: (value) {
                       setState(() {
                         Constants.fontSize = value;
-                        _SetThemeMod();
+                        _setfontsize();
                       });
                     },
                     activeColor: Constants.themeColor,
@@ -123,7 +123,7 @@ class _SettingPageState extends State<SettingPage> {
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
-                          fontFamily: 'Jazeera-Regular',
+                          fontFamily: Constants.regularFontFamily,
                         ),
                       ),
                     ],
@@ -137,7 +137,7 @@ class _SettingPageState extends State<SettingPage> {
                     onChanged: (value) {
                       setState(() {
                         Constants.lineHeight = value;
-                        _SetThemeMod();
+                        _setlineheight();
                       });
                     },
                     activeColor: Constants.themeColor,
@@ -150,7 +150,15 @@ class _SettingPageState extends State<SettingPage> {
             const Divider(),
             // SHARE
             InkWell(
-              onTap: () {},
+              onTap: () {
+                final box = context.findRenderObject() as RenderBox?;
+                Share.share(
+                  "أدعوك للاطلاع على تطبيق (${Constants.packageInfo.appName}) وذلك عبر الرابط التالي: \n https://play.google.com/store/apps/details?id=${Constants.packageInfo.packageName}",
+                  subject: "المشاركة ضمن:",
+                  sharePositionOrigin:
+                      box!.localToGlobal(Offset.zero) & box.size,
+                );
+              },
               child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 15),
                 child: Row(
@@ -169,7 +177,7 @@ class _SettingPageState extends State<SettingPage> {
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 16,
-                            fontFamily: 'Jazeera-Regular',
+                            fontFamily: Constants.regularFontFamily,
                           ),
                         ),
                       ],

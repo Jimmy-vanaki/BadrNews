@@ -1,9 +1,14 @@
 import 'package:badrnews/constants/constants.dart';
+import 'package:badrnews/screens/about_page.dart';
+import 'package:badrnews/screens/privacy_policy_page.dart';
 import 'package:badrnews/screens/bookmark_page.dart';
 import 'package:badrnews/screens/news_list_page.dart';
 import 'package:badrnews/screens/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   final List<IconData> drawerItemIcon = [
     Icons.home,
     Icons.assignment_late_outlined,
-    Icons.phone_enabled,
+    Icons.email_outlined,
     Icons.privacy_tip_outlined,
     Icons.share,
   ];
@@ -84,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                     './Assets/images/hd-bn.jpg',
                     fit: BoxFit.fill,
                   ),
-                  const SizedBox(height: 100),
+                  const SizedBox(height: 50),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
@@ -99,13 +104,13 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const SizedBox(height: 200),
-                  Align(
+                  const Align(
                     alignment: Alignment.bottomCenter,
                     child: Text(
                       "الاصدار: 1.1",
                       style: TextStyle(
                         color: Colors.black87,
-                        fontFamily: 'Jazeera-Regular',
+                        fontFamily: Constants.regularFontFamily,
                       ),
                     ),
                   )
@@ -153,9 +158,54 @@ class DrawerItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        debugPrint(tag.toString());
+        switch (tag) {
+          case 0:
+            Scaffold.of(context).closeDrawer();
+            break;
+          case 1:
+            Navigator.push(
+              context,
+              PageTransition(
+                child: const AboutPage(),
+                type: PageTransitionType.bottomToTop,
+              ),
+            );
+            break;
+          case 2:
+            final Email email = Email(
+              recipients: ['info@bnnews.iq'],
+              isHTML: false,
+            );
+            await FlutterEmailSender.send(email);
+            break;
+          case 3:
+            Navigator.push(
+              context,
+              PageTransition(
+                child: const PrivacyPolicyPage(
+                  url: 'https://bnnews.iq/privacy_bnnews.html',
+                ),
+                type: PageTransitionType.bottomToTop,
+              ),
+            );
+            break;
+          case 4:
+            final box = context.findRenderObject() as RenderBox?;
+            Share.share(
+              "أدعوك للاطلاع على تطبيق (${Constants.packageInfo.appName}) وذلك عبر الرابط التالي: \n https://play.google.com/store/apps/details?id=${Constants.packageInfo.packageName}",
+              subject: "المشاركة ضمن:",
+              sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+            );
+
+            break;
+
+          default:
+        }
+      },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           textDirection: TextDirection.rtl,
@@ -171,7 +221,7 @@ class DrawerItems extends StatelessWidget {
               style: const TextStyle(
                 color: Colors.black87,
                 fontSize: 16,
-                fontFamily: 'Jazeera-Regular',
+                fontFamily: Constants.regularFontFamily,
               ),
             ),
           ],

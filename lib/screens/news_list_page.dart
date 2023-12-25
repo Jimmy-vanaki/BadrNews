@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:badrnews/Components/news_card.dart';
 import 'package:badrnews/Components/skeleton.dart';
 import 'package:badrnews/api/news_api.dart';
@@ -8,7 +10,7 @@ import 'package:badrnews/screens/search_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class NewsListPag extends StatefulWidget {
   const NewsListPag({super.key});
@@ -17,12 +19,26 @@ class NewsListPag extends StatefulWidget {
   State<NewsListPag> createState() => _NewsListPagState();
 }
 
-final CarouselController _CarouselController = CarouselController();
-
 class _NewsListPagState extends State<NewsListPag> {
   int _current = 0;
   int selectedCategory = 0;
+  int gid = 0;
   Future<PostNews>? listNews;
+  final CarouselController _carouselController = CarouselController();
+
+  final GlobalKey<LiquidPullToRefreshState> _refreshIndicatorKey =
+      GlobalKey<LiquidPullToRefreshState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<void> _handleRefresh() async {
+    setState(() {
+      debugPrint("$selectedCategory<<<<<<<");
+      Constants.changeCategory = false;
+      Constants.refreshNews = true;
+      listNews = fetchNews(gid);
+    });
+  }
+
   static const List<String> sampleImages = [
     './Assets/images/d-s001.jpg',
     './Assets/images/d-s002.jpg',
@@ -32,202 +48,214 @@ class _NewsListPagState extends State<NewsListPag> {
 
   @override
   void initState() {
-    listNews = fetchNews(0);
+    listNews = fetchNews(gid);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
-      body: SizedBox(
-        width: size.width,
-        height: size.height,
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 15,
-                  horizontal: 20,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      "أحدث الأخبار",
-                      style: TextStyle(
-                        fontFamily: 'Jazeera-Bold',
-                        fontWeight: FontWeight.w900,
-                        fontSize: 18,
-                        color: Constants.themeColor,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            child: const SearchPage(),
-                            type: PageTransitionType.bottomToTop,
-                          ),
-                        );
-                      },
-                      child: RotatedBox(
-                        quarterTurns: 1,
-                        child: Icon(
-                          Icons.search,
+      key: _scaffoldKey,
+      body: LiquidPullToRefresh(
+        key: _refreshIndicatorKey,
+        backgroundColor: Colors.white,
+        color: Constants.themeColor.withAlpha(200),
+        showChildOpacityTransition: false,
+        springAnimationDurationInMilliseconds: 300,
+        height: 50,
+        onRefresh: _handleRefresh,
+        child: SizedBox(
+          width: size.width,
+          height: size.height,
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: 20,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "أحدث الأخبار",
+                        style: TextStyle(
+                          fontFamily: Constants.boldFontFamily,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 18,
                           color: Constants.themeColor,
-                          size: 30,
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ),
-              // Slider News
-              Column(
-                children: <Widget>[
-                  CarouselSlider(
-                    options: CarouselOptions(
-                      height: 220.0,
-                      autoPlay: true,
-                      disableCenter: true,
-                      enlargeCenterPage: true,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _current = index;
-                        });
-                      },
-                    ),
-                    items: [0, 1, 2, 3].map((i) {
-                      return FutureBuilder(
-                        future: listNews,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<PostNews> snapshot) {
-                          if (snapshot.hasData &&
-                              Constants.changeCategory == true) {
-                            return SliderItem(
-                              id: snapshot.data!.sliders[i].id,
-                              image: Constants.sliderImageURLPrefix +
-                                  snapshot.data!.sliders[i].img,
-                              title: snapshot.data!.sliders[i].title,
-                            );
-                          } else if (snapshot.hasError) {
-                            return Center(child: Text("${snapshot.error}"));
-                          }
-                          return const SkeltonSlider();
-                        },
-                      );
-                    }).toList(),
-                  ),
-                  Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: sampleImages.asMap().entries.map((entry) {
-                        return GestureDetector(
-                          onTap: () =>
-                              _CarouselController.animateToPage(entry.key),
-                          child: Container(
-                            width: 8.0,
-                            height: 8.0,
-                            margin: const EdgeInsets.symmetric(
-                              vertical: 8.0,
-                              horizontal: 4.0,
-                            ),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: (Constants.themeColor).withOpacity(
-                                  _current == entry.key ? 0.9 : 0.4),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ],
-              ),
-              // CATEGORY
-              SizedBox(
-                height: 30,
-                width: size.width,
-                child: FutureBuilder(
-                  future: listNews,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<PostNews> snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: snapshot.data!.categories.length,
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              setState(() {
-                                Constants.changeCategory = false;
-                                listNews = fetchNews(
-                                    snapshot.data!.categories[index].id);
-                                selectedCategory = index;
-                              });
-                            },
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: selectedCategory == index
-                                          ? Constants.themeColor
-                                          : Colors.transparent,
-                                      width: 3.0,
-                                    ),
-                                  ),
-                                ),
-                                child: Text(
-                                  snapshot.data!.categories[index].title,
-                                  textAlign: TextAlign.center,
-                                  textDirection: TextDirection.rtl,
-                                  style: TextStyle(
-                                    fontFamily: 'Jazeera-Regular',
-                                    fontSize: 17,
-                                    fontWeight: selectedCategory == index
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                    color: selectedCategory == index
-                                        ? Constants.themeColor
-                                        : Constants.itemColor,
-                                  ),
-                                ),
-                              ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: const SearchPage(),
+                              type: PageTransitionType.bottomToTop,
                             ),
                           );
                         },
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text("${snapshot.error}"));
-                    }
-                    return ListView.builder(
-                      itemCount: 10,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return const SkeltonCategory();
-                      },
-                    );
-                  },
+                        child: RotatedBox(
+                          quarterTurns: 1,
+                          child: Icon(
+                            Icons.search,
+                            color: Constants.themeColor,
+                            size: 30,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
+                // Slider News
+                Column(
+                  children: <Widget>[
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        height: 220.0,
+                        autoPlay: true,
+                        disableCenter: true,
+                        enlargeCenterPage: true,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _current = index;
+                          });
+                        },
+                      ),
+                      items: [0, 1, 2, 3].map((i) {
+                        return FutureBuilder(
+                          future: listNews,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<PostNews> snapshot) {
+                            if (snapshot.hasData &&
+                                Constants.changeCategory == true && Constants.refreshNews == false) {
+                              return SliderItem(
+                                id: snapshot.data!.sliders[i].id,
+                                image: Constants.sliderImageURLPrefix +
+                                    snapshot.data!.sliders[i].img,
+                                title: snapshot.data!.sliders[i].title,
+                              );
+                            } else if (snapshot.hasError) {
+                              return Center(child: Text("${snapshot.error}"));
+                            }
+                            return const SkeltonSlider();
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: sampleImages.asMap().entries.map((entry) {
+                          return GestureDetector(
+                            onTap: () =>
+                                _carouselController.animateToPage(entry.key),
+                            child: Container(
+                              width: 8.0,
+                              height: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 8.0,
+                                horizontal: 4.0,
+                              ),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: (Constants.themeColor).withOpacity(
+                                    _current == entry.key ? 0.9 : 0.4),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+                // CATEGORY
+                SizedBox(
+                  height: 30,
+                  width: size.width,
+                  child: FutureBuilder(
+                    future: listNews,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<PostNews> snapshot) {
+                      if (snapshot.hasData && Constants.refreshNews == false) {
+                        return ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: snapshot.data!.categories.length,
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  Constants.changeCategory = false;
+                                  gid = snapshot.data!.categories[index].id;
 
-              //News List
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                width: size.width - 20,
-                child: FutureBuilderNews(listNews: listNews),
-              ),
-            ],
+                                  listNews = fetchNews(gid);
+                                  selectedCategory = index;
+                                });
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: selectedCategory == index
+                                            ? Constants.themeColor
+                                            : Colors.transparent,
+                                        width: 3.0,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    snapshot.data!.categories[index].title,
+                                    textAlign: TextAlign.center,
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                      fontFamily: Constants.regularFontFamily,
+                                      fontSize: 17,
+                                      fontWeight: selectedCategory == index
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: selectedCategory == index
+                                          ? Constants.themeColor
+                                          : Constants.itemColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text("${snapshot.error}"));
+                      }
+                      return ListView.builder(
+                        itemCount: 10,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return const SkeltonCategory();
+                        },
+                      );
+                    },
+                  ),
+                ),
+
+                //News List
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  width: size.width - 20,
+                  child: FutureBuilderNews(listNews: listNews),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -248,7 +276,7 @@ class FutureBuilderNews extends StatelessWidget {
     return FutureBuilder(
       future: listNews,
       builder: (BuildContext context, AsyncSnapshot<PostNews> snapshot) {
-        if (snapshot.hasData && Constants.changeCategory == true) {
+        if (snapshot.hasData && Constants.changeCategory == true && Constants.refreshNews == false) {
           return ListView.builder(
             physics: const BouncingScrollPhysics(),
             itemCount: snapshot.data!.news.length,
@@ -301,6 +329,7 @@ class SliderItem extends StatelessWidget {
           PageTransition(
             child: NewsContent(
               newsId: id,
+              sw: '',
             ),
             type: PageTransitionType.bottomToTop,
           ),
@@ -370,7 +399,7 @@ class SliderItem extends StatelessWidget {
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 15,
-                      fontFamily: 'Jazeera-Bold',
+                      fontFamily: Constants.boldFontFamily,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

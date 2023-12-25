@@ -36,6 +36,7 @@ class _NewsCardState extends State<NewsCard> {
           PageTransition(
             child: NewsContent(
               newsId: widget.id,
+              sw: widget.sw,
             ),
             type: PageTransitionType.bottomToTop,
           ),
@@ -97,7 +98,7 @@ class _NewsCardState extends State<NewsCard> {
                         overflow: TextOverflow.ellipsis,
                         textStyle: const TextStyle(
                           fontSize: 15,
-                          fontFamily: 'Jazeera-Bold',
+                          fontFamily: Constants.boldFontFamily,
                           color: Colors.black87,
                         ),
                         textStyleHighlight: TextStyle(
@@ -118,7 +119,7 @@ class _NewsCardState extends State<NewsCard> {
                       textAlign: TextAlign.justify,
                       style: const TextStyle(
                         fontSize: 10,
-                        fontFamily: 'Jazeera-Regular',
+                        fontFamily: Constants.regularFontFamily,
                       ),
                     ),
                   ),

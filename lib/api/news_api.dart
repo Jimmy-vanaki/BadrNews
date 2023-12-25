@@ -13,6 +13,8 @@ Future<PostNews>? fetchNews(int gid) async {
     //     jsonDecode(response.body).map((x) => PostNews.fromJson(x)));
     // return listPost;
     Constants.changeCategory = true;
+    Constants.refreshNews = false;
+
     return PostNews.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Faild to load Posts');
@@ -35,7 +37,7 @@ Future<Search>? fetchSearchItem(
   String searchInTitle,
   String searchInText,
 ) async {
-  debugPrint(searchWord+searchInText+searchInTitle);
+  debugPrint(searchWord + searchInText + searchInTitle);
 
   final response = await http.get(
     Uri.https('bnnews.iq', '/api/news', {

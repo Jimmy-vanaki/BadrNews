@@ -77,7 +77,7 @@ class _SearchPageState extends State<SearchPage> {
                       },
                       style: const TextStyle(
                         fontSize: 15,
-                        fontFamily: 'Jazeera-Regular',
+                        fontFamily: Constants.regularFontFamily,
                         color: Colors.black87,
                       ),
                       decoration: InputDecoration(
@@ -112,7 +112,7 @@ class _SearchPageState extends State<SearchPage> {
                                       'يرجى تحديد نطاق البحث',
                                       textAlign: TextAlign.right,
                                       style: TextStyle(
-                                        fontFamily: 'Jazeera-Regular',
+                                        fontFamily: Constants.regularFontFamily,
                                       ),
                                     ),
                                     behavior: SnackBarBehavior.floating,
@@ -150,17 +150,17 @@ class _SearchPageState extends State<SearchPage> {
                         helperText: "",
                         hintStyle: const TextStyle(
                           fontSize: 15,
-                          fontFamily: 'Jazeera-Regular',
+                          fontFamily: Constants.regularFontFamily,
                         ),
                         labelStyle: TextStyle(
                           fontSize: 15,
-                          fontFamily: 'Jazeera-Regular',
+                          fontFamily: Constants.regularFontFamily,
                           color: Constants.iconsColor,
                         ),
                         helperStyle: TextStyle(
                           fontSize: 10,
                           color: Constants.iconsColor,
-                          fontFamily: 'Jazeera-Regular',
+                          fontFamily: Constants.regularFontFamily,
                         ),
                       ),
                     ),
@@ -174,7 +174,7 @@ class _SearchPageState extends State<SearchPage> {
                         const Text(
                           "النص",
                           style: TextStyle(
-                            fontFamily: 'Jazeera-Regular',
+                            fontFamily: Constants.regularFontFamily,
                             fontSize: 15,
                           ),
                         ),
@@ -206,7 +206,7 @@ class _SearchPageState extends State<SearchPage> {
                         const Text(
                           "العنوان",
                           style: TextStyle(
-                            fontFamily: 'Jazeera-Regular',
+                            fontFamily: Constants.regularFontFamily,
                             fontSize: 15,
                           ),
                         ),

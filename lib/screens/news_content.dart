@@ -10,9 +10,11 @@ import 'package:share_plus/share_plus.dart';
 
 class NewsContent extends StatefulWidget {
   final int newsId;
+  final String sw;
   const NewsContent({
     super.key,
     required this.newsId,
+    required this.sw,
   });
 
   @override
@@ -20,8 +22,6 @@ class NewsContent extends StatefulWidget {
 }
 
 class _NewsContentState extends State<NewsContent> {
-  // bool addToFavorite =   hass(widget.newsId);
-  String newsText = "";
   Future<PostNewsContent>? newsContent;
 
   @override
@@ -40,12 +40,6 @@ class _NewsContentState extends State<NewsContent> {
         builder:
             (BuildContext context, AsyncSnapshot<PostNewsContent> snapshot) {
           if (snapshot.hasData) {
-            newsText = snapshot.data!.post[0].content;
-            newsText = newsText.replaceAll("&nbsp;", " ");
-            newsText = newsText.replaceAll("&ldquo;", '"');
-            newsText = newsText.replaceAll("&rdquo;", '"');
-
-            newsText = removeAllHtmlTags(newsText);
             return SizedBox(
               width: size.width,
               height: size.height,
@@ -98,7 +92,7 @@ class _NewsContentState extends State<NewsContent> {
                                     textAlign: TextAlign.justify,
                                     style: TextStyle(
                                       fontSize: Constants.fontSize + 4,
-                                      fontFamily: 'Jazeera-Bold',
+                                      fontFamily: Constants.boldFontFamily,
                                       color: Constants.themeColor,
                                     ),
                                   ),
@@ -114,11 +108,16 @@ class _NewsContentState extends State<NewsContent> {
                                         // Share.share("text");
                                         final box = context.findRenderObject()
                                             as RenderBox?;
-
+                                        String shareNews;
+                                        shareNews =
+                                            '${Constants.shareAppText}\n${snapshot.data!.post[0].title}\n${snapshot.data!.post[0].content}';
+                                        shareNews =
+                                            removeAllHtmlTags(shareNews);
+                                        shareNews =
+                                            shareNews.replaceAll('&nbsp;', '');
                                         Share.share(
-                                          Constants.shareAppText +
-                                              snapshot.data!.post[0].content,
-                                          subject: snapshot.data!.post[0].title,
+                                          shareNews,
+                                          subject: '',
                                           sharePositionOrigin:
                                               box!.localToGlobal(Offset.zero) &
                                                   box.size,
@@ -135,7 +134,8 @@ class _NewsContentState extends State<NewsContent> {
                                           .toString(),
                                       style: const TextStyle(
                                           fontSize: 12,
-                                          fontFamily: 'Jazeera-Regular',
+                                          fontFamily:
+                                              Constants.regularFontFamily,
                                           color: Colors.black54),
                                     ),
                                   ],
@@ -143,6 +143,7 @@ class _NewsContentState extends State<NewsContent> {
                                 const SizedBox(height: 15),
                                 LoadContentWebView(
                                   content: snapshot.data!.post[0].content,
+                                  sw: widget.sw,
                                 ),
                               ],
                             ),
@@ -203,7 +204,8 @@ class _NewsContentState extends State<NewsContent> {
                                         'تمت الاضافة للمفضلة',
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
-                                          fontFamily: 'Jazeera-Regular',
+                                          fontFamily:
+                                              Constants.regularFontFamily,
                                         ),
                                       ),
                                       behavior: SnackBarBehavior.floating,
@@ -233,7 +235,8 @@ class _NewsContentState extends State<NewsContent> {
                                         'تم الحذف من المفضلة',
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
-                                          fontFamily: 'Jazeera-Regular',
+                                          fontFamily:
+                                              Constants.regularFontFamily,
                                         ),
                                       ),
                                       behavior: SnackBarBehavior.floating,

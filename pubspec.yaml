@@ -18,18 +18,20 @@ dependencies:
   share_plus: ^7.2.1
   page_transition: ^2.1.0
   blurrycontainer: ^1.0.2
-  pull_to_refresh_flutter3: ^2.0.2
   skeletons: ^0.0.3
   shared_preferences: ^2.2.2
   http: ^1.1.0
   substring_highlight: ^1.0.33
-  webview_flutter: ^4.4.2
   sqflite: ^2.3.0
   path: ^1.8.3
   lottie: ^2.6.0
   firebase_messaging: ^14.7.9
   firebase_core: ^2.24.2
   flutter_html: ^3.0.0-beta.2
+  webview_flutter: ^4.4.2
+  liquid_pull_to_refresh: ^3.0.1
+  package_info_plus: ^4.2.0
+  flutter_email_sender: ^6.0.2
 
 dev_dependencies:
   flutter_test:
